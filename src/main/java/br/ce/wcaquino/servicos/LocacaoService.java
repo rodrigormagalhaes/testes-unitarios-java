@@ -8,6 +8,8 @@ import br.ce.wcaquino.entidades.Filme;
 import br.ce.wcaquino.entidades.Locacao;
 import br.ce.wcaquino.entidades.Usuario;
 import br.ce.wcaquino.utils.DataUtils;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class LocacaoService {
 	
@@ -28,8 +30,9 @@ public class LocacaoService {
 		
 		return locacao;
 	}
-	
-	public static void main(String[] args) {
+
+	@Test
+	public void teste() {
 		//cenario
 		LocacaoService service = new LocacaoService();
 		Usuario usuario = new Usuario("Usuario 1");
@@ -39,8 +42,10 @@ public class LocacaoService {
 		Locacao locacao = service.alugarFilme(usuario, filme);
 		
 		//verificacao
-		System.out.println(locacao.getValor() == 5.0);
-		System.out.println(DataUtils.isMesmaData(locacao.getDataLocacao(), new Date()));
-		System.out.println(DataUtils.isMesmaData(locacao.getDataRetorno(), DataUtils.obterDataComDiferencaDias(1)));
+		Assertions.assertTrue(locacao.getValor() == 5.0);
+		Assertions.assertTrue(DataUtils.isMesmaData(locacao.getDataLocacao(), new Date()));
+		Assertions.assertTrue(DataUtils.isMesmaData(locacao.getDataRetorno(), DataUtils.obterDataComDiferencaDias(1)));
+
+
 	}
 }

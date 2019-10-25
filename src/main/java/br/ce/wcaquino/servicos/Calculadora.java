@@ -1,5 +1,7 @@
 package br.ce.wcaquino.servicos;
 
+import br.ce.wcaquino.br.ce.wcaquino.exceptions.NaoPodeDividirPorZeroException;
+
 public class Calculadora {
 
     public int somar(int a, int b) {
@@ -8,5 +10,13 @@ public class Calculadora {
 
     public int subtract(int i, int i1) {
         return i - i1;
+    }
+
+    public int divide(int x, int y) throws NaoPodeDividirPorZeroException {
+        if (y == 0) {
+            throw new NaoPodeDividirPorZeroException();
+        }
+
+        return x/y;
     }
 }

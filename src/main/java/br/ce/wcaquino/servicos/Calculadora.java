@@ -19,4 +19,9 @@ public class Calculadora {
 
         return x/y;
     }
+
+    public int divide(String x, String y) {
+        return Integer.valueOf(x) / Integer.valueOf(y);
+    }
+
 }

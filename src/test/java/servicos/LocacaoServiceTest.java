@@ -2,6 +2,8 @@ package servicos;
 
 import br.ce.wcaquino.br.ce.wcaquino.exceptions.FilmeSemEstoqueException;
 import br.ce.wcaquino.br.ce.wcaquino.exceptions.LocadoraException;
+import br.ce.wcaquino.daos.LocacaoDAO;
+import br.ce.wcaquino.daos.LocacaoDAOFake;
 import br.ce.wcaquino.entidades.Filme;
 import br.ce.wcaquino.entidades.Locacao;
 import br.ce.wcaquino.entidades.Usuario;
@@ -38,6 +40,9 @@ public class LocacaoServiceTest {
     @Before
     public void setUp() {
         service = new LocacaoService();
+        LocacaoDAO dao = new LocacaoDAOFake();
+
+        service.setLocacaoDAO(dao);
     }
 
     @Test

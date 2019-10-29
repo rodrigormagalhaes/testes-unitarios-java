@@ -2,13 +2,14 @@ package servicos;
 
 import br.ce.wcaquino.br.ce.wcaquino.exceptions.FilmeSemEstoqueException;
 import br.ce.wcaquino.br.ce.wcaquino.exceptions.LocadoraException;
+import br.ce.wcaquino.daos.LocacaoDAO;
+import br.ce.wcaquino.daos.LocacaoDAOFake;
 import br.ce.wcaquino.entidades.Filme;
 import br.ce.wcaquino.entidades.Locacao;
 import br.ce.wcaquino.entidades.Usuario;
 import br.ce.wcaquino.servicos.LocacaoService;
 import br.ce.wcaquino.utils.DataUtils;
 import buildermaster.BuilderMaster;
-import builders.FilmeBuilder;
 import builders.UsuarioBuilder;
 import matchers.DiaSemanaMatcher;
 import matchers.MatchersProprios;
@@ -23,7 +24,8 @@ import java.util.List;
 
 import static br.ce.wcaquino.utils.DataUtils.isMesmaData;
 import static br.ce.wcaquino.utils.DataUtils.obterDataComDiferencaDias;
-import static builders.FilmeBuilder.*;
+import static builders.FilmeBuilder.umFilme;
+import static builders.FilmeBuilder.umFilmeSemEstoque;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -42,6 +44,9 @@ public class LocacaoServiceTest2 {
     @Before
     public void setUp() {
         service = new LocacaoService();
+        LocacaoDAO dao = new LocacaoDAOFake();
+
+        service.setLocacaoDAO(dao);
     }
 
     @Test

@@ -8,12 +8,14 @@ import br.ce.wcaquino.entidades.Filme;
 import br.ce.wcaquino.entidades.Locacao;
 import br.ce.wcaquino.entidades.Usuario;
 import br.ce.wcaquino.servicos.LocacaoService;
+import br.ce.wcaquino.servicos.SPCService;
 import br.ce.wcaquino.utils.DataUtils;
 import matchers.DiaSemanaMatcher;
 import matchers.MatchersProprios;
 import org.junit.*;
 import org.junit.rules.ErrorCollector;
 import org.junit.rules.ExpectedException;
+import org.mockito.Mockito;
 
 import java.util.Arrays;
 import java.util.Calendar;
@@ -40,9 +42,13 @@ public class LocacaoServiceTest {
     @Before
     public void setUp() {
         service = new LocacaoService();
-        LocacaoDAO dao = new LocacaoDAOFake();
 
+        //LocacaoDAO dao = new LocacaoDAOFake();
+        LocacaoDAO dao = Mockito.mock(LocacaoDAO.class);
         service.setLocacaoDAO(dao);
+
+        SPCService spcService = Mockito.mock(SPCService.class);
+        service.setSpcService(spcService);
     }
 
     @Test

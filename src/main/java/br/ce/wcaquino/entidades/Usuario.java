@@ -32,4 +32,8 @@ public class Usuario {
 	public int hashCode() {
 		return getNome().hashCode();
 	}
+
+	public String toString() {
+		return "Usuário [nome=" + nome + "]";
+	}
 }

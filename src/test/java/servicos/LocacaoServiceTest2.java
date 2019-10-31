@@ -27,13 +27,17 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import static br.ce.wcaquino.utils.DataUtils.*;
 import static br.ce.wcaquino.utils.DataUtils.isMesmaData;
 import static br.ce.wcaquino.utils.DataUtils.obterDataComDiferencaDias;
 import static builders.FilmeBuilder.umFilme;
 import static builders.FilmeBuilder.umFilmeSemEstoque;
+import static builders.LocacaoBuilder.*;
+import static builders.UsuarioBuilder.*;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.mockito.Mockito.*;
 
 
 public class LocacaoServiceTest2 {
@@ -54,22 +58,22 @@ public class LocacaoServiceTest2 {
         service = new LocacaoService();
 
         //LocacaoDAO dao = new LocacaoDAOFake();
-        dao = Mockito.mock(LocacaoDAO.class);
+        dao = mock(LocacaoDAO.class);
         service.setLocacaoDAO(dao);
 
-        spcService = Mockito.mock(SPCService.class);
+        spcService = mock(SPCService.class);
         service.setSpcService(spcService);
 
-        email = Mockito.mock(EmailService.class);
+        email = mock(EmailService.class);
         service.setEmailService(email);
     }
 
     @Test
     public void shouldRentFilm() throws Exception {
 
-        Assume.assumeFalse(DataUtils.verificarDiaSemana(new Date(), Calendar.SATURDAY));
+        Assume.assumeFalse(verificarDiaSemana(new Date(), Calendar.SATURDAY));
 
-        Usuario usuario = UsuarioBuilder.umUsuario().agora();
+        Usuario usuario = umUsuario().agora();
         List<Filme> filmes = Arrays.asList(umFilme().comValor(5.0).agora());
 
         Locacao locacao;
@@ -89,7 +93,7 @@ public class LocacaoServiceTest2 {
 
     @Test(expected = FilmeSemEstoqueException.class)
     public void shouldThrowExceptionWhenRentFilmWithoutStock() throws Exception {
-        Usuario usuario = UsuarioBuilder.umUsuario().agora();
+        Usuario usuario = umUsuario().agora();
        // List<Filme> filmes = Arrays.asList(umFilme().semEstoque().agora());
         List<Filme> filmes = Arrays.asList(umFilmeSemEstoque().agora());
 
@@ -111,7 +115,7 @@ public class LocacaoServiceTest2 {
 
     @Test
     public void shouldNotRentFilm() throws FilmeSemEstoqueException, LocadoraException {
-        Usuario usuario = UsuarioBuilder.umUsuario().agora();
+        Usuario usuario = umUsuario().agora();
 
         exception.expect(LocadoraException.class);
         exception.expectMessage("Filme vazio");
@@ -136,7 +140,7 @@ public class LocacaoServiceTest2 {
 
     @Test
     public void shouldPay50PctFilm4() throws FilmeSemEstoqueException, LocadoraException {
-        Usuario usuario = UsuarioBuilder.umUsuario().agora();
+        Usuario usuario = umUsuario().agora();
         List<Filme> filmes = Arrays.asList(
                 umFilme().agora(),
                 umFilme().agora(),
@@ -152,7 +156,7 @@ public class LocacaoServiceTest2 {
 
     @Test
     public void shouldPay25PctFilm5() throws FilmeSemEstoqueException, LocadoraException {
-        Usuario usuario = UsuarioBuilder.umUsuario().agora();
+        Usuario usuario = umUsuario().agora();
         List<Filme> filmes = Arrays.asList(
                 umFilme().agora(),
                 umFilme().agora(),
@@ -169,7 +173,7 @@ public class LocacaoServiceTest2 {
 
     @Test
     public void shouldPay0Film6() throws FilmeSemEstoqueException, LocadoraException {
-        Usuario usuario = UsuarioBuilder.umUsuario().agora();
+        Usuario usuario = umUsuario().agora();
         List<Filme> filmes = Arrays.asList(
                 umFilme().agora(),
                 umFilme().agora(),
@@ -187,9 +191,9 @@ public class LocacaoServiceTest2 {
 
     @Test
     public void shouldGiveBackOnMondayWhenRentOnSaturday() throws FilmeSemEstoqueException, LocadoraException {
-        Assume.assumeTrue(DataUtils.verificarDiaSemana(new Date(), Calendar.SATURDAY));
+        Assume.assumeTrue(verificarDiaSemana(new Date(), Calendar.SATURDAY));
 
-        Usuario usuario = UsuarioBuilder.umUsuario().agora();
+        Usuario usuario = umUsuario().agora();
         List<Filme> filmes = Arrays.asList(umFilme().agora());
 
         Locacao retorno = service.alugarFilme(usuario, filmes);
@@ -207,12 +211,12 @@ public class LocacaoServiceTest2 {
 
     @Test
     public void shouldNotRentFilmUserInSPC() throws FilmeSemEstoqueException {
-        Usuario usuario = UsuarioBuilder.umUsuario().agora();
+        Usuario usuario = umUsuario().agora();
         //Usuario usuario2 = UsuarioBuilder.umUsuario().comNome("Usuário 2").agora();
 
         List<Filme> filmes = Arrays.asList(umFilme().agora());
 
-        Mockito.when(spcService.possuiNegativacao(usuario)).thenReturn(true);
+        when(spcService.possuiNegativacao(Mockito.any(Usuario.class))).thenReturn(true);
 
         try {
             service.alugarFilme(usuario, filmes);
@@ -221,24 +225,29 @@ public class LocacaoServiceTest2 {
             Assert.assertThat(e.getMessage(), is("Usuário negativado"));
         }
 
-        Mockito.verify(spcService).possuiNegativacao(usuario);
+        verify(spcService).possuiNegativacao(usuario);
     }
 
     @Test
     public void shouldSendEmailDelayedLocations() {
-        Usuario usuario = UsuarioBuilder.umUsuario().agora();
-        //Usuario usuario2 = UsuarioBuilder.umUsuario().comNome("Usuário 2").agora();
+        Usuario usuario = umUsuario().agora();
+        Usuario usuario2 = umUsuario().comNome("Usuário em dia").agora();
+        Usuario usuario3 = umUsuario().comNome("Outro usuário atrasado").agora();
 
-        List<Locacao> locacoes =
-                Arrays.asList(LocacaoBuilder.umLocacao()
-                        .comUsuario(usuario)
-                        .comDataRetorno(DataUtils.obterDataComDiferencaDias(-2))
-                        .agora());
+        List<Locacao> locacoes = Arrays.asList(
+                umLocacao().delayed().comUsuario(usuario).agora(),
+                umLocacao().comUsuario(usuario2).agora(),
+                umLocacao().delayed().comUsuario(usuario3).agora(),
+                umLocacao().delayed().comUsuario(usuario3).agora());
 
-        Mockito.when(dao.getPendentLocations()).thenReturn(locacoes);
+        when(dao.getPendentLocations()).thenReturn(locacoes);
 
         service.notifyDelays();
 
-        Mockito.verify(email).notifyDelay(usuario);
+        verify(email, Mockito.times(3)).notifyDelay(Mockito.any(Usuario.class));
+        verify(email).notifyDelay(usuario);
+        verify(email, atLeastOnce()).notifyDelay(usuario3);
+        verify(email, never()).notifyDelay(usuario2);
+        verifyNoMoreInteractions(email);
     }
 }

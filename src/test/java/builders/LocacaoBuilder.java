@@ -12,7 +12,7 @@ import static builders.UsuarioBuilder.*;
 
 
 public class LocacaoBuilder {
-    private Locacao elemento;
+    private Locacao locacao;
     private LocacaoBuilder(){}
 
     public static LocacaoBuilder umLocacao() {
@@ -22,42 +22,49 @@ public class LocacaoBuilder {
     }
 
     public static void inicializarDadosPadroes(LocacaoBuilder builder) {
-        builder.elemento = new Locacao();
-        Locacao elemento = builder.elemento;
+        builder.locacao = new Locacao();
+        Locacao locacao = builder.locacao;
 
-        elemento.setUsuario(umUsuario().agora());
-        elemento.setFilmes(Arrays.asList(FilmeBuilder.umFilme().agora()));
-        elemento.setDataLocacao(new Date());
-        elemento.setDataRetorno(DataUtils.obterDataComDiferencaDias(1));
-        elemento.setValor(4.0);
+        locacao.setUsuario(umUsuario().agora());
+        locacao.setFilmes(Arrays.asList(FilmeBuilder.umFilme().agora()));
+        locacao.setDataLocacao(new Date());
+        locacao.setDataRetorno(DataUtils.obterDataComDiferencaDias(1));
+        locacao.setValor(4.0);
     }
 
     public LocacaoBuilder comUsuario(Usuario param) {
-        elemento.setUsuario(param);
+        locacao.setUsuario(param);
         return this;
     }
 
     public LocacaoBuilder comListaFilmes(Filme... params) {
-        elemento.setFilmes(Arrays.asList(params));
+        locacao.setFilmes(Arrays.asList(params));
         return this;
     }
 
     public LocacaoBuilder comDataLocacao(Date param) {
-        elemento.setDataLocacao(param);
+        locacao.setDataLocacao(param);
         return this;
     }
 
     public LocacaoBuilder comDataRetorno(Date param) {
-        elemento.setDataRetorno(param);
+        locacao.setDataRetorno(param);
         return this;
     }
 
     public LocacaoBuilder comValor(Double param) {
-        elemento.setValor(param);
+        locacao.setValor(param);
         return this;
     }
 
     public Locacao agora() {
-        return elemento;
+        return locacao;
+    }
+
+    public LocacaoBuilder delayed() {
+        locacao.setDataLocacao(DataUtils.obterDataComDiferencaDias(-4));
+        locacao.setDataRetorno(DataUtils.obterDataComDiferencaDias(-2));
+
+        return this;
     }
 }

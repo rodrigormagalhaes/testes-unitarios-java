@@ -33,9 +33,6 @@ public class CalculadoraMockTest {
 
     }
 
-
-
-
     @Test
     public void test() {
         Calculadora calc = Mockito.mock(Calculadora.class);

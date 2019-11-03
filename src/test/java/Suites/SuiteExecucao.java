@@ -2,6 +2,7 @@ package Suites;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import servicos.CalculadoraTest;
@@ -14,6 +15,7 @@ import servicos.LocacaoServiceTest;
         CalculoValorLocacaoTest.class,
         LocacaoServiceTest.class
 })
+@Ignore
 public class SuiteExecucao {
 
     @BeforeClass

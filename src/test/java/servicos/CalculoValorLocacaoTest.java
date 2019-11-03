@@ -9,6 +9,8 @@ import br.ce.wcaquino.entidades.Locacao;
 import br.ce.wcaquino.entidades.Usuario;
 import br.ce.wcaquino.servicos.LocacaoService;
 import br.ce.wcaquino.servicos.SPCService;
+import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -55,6 +57,19 @@ public class CalculoValorLocacaoTest {
 
         SPCService spcService = Mockito.mock(SPCService.class);
         service.setSpcService(spcService);
+
+        System.out.println("Iniciando 4...");
+        CalculadoraTest.ordem.append(3);
+    }
+
+    @AfterClass
+    public static void tearDownClass() {
+        System.out.println(CalculadoraTest.ordem.toString());
+    }
+
+    @After
+    public void tearDown() {
+        System.out.println("Finalizando 4...");
     }
 
     @Parameterized.Parameters(name = "{2}")

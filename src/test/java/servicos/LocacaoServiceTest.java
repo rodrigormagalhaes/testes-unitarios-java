@@ -14,7 +14,9 @@ import matchers.MatchersProprios;
 import org.junit.*;
 import org.junit.rules.ErrorCollector;
 import org.junit.rules.ExpectedException;
+import org.junit.runner.RunWith;
 import org.mockito.Mockito;
+import runners.ParallelRunner;
 
 import java.util.Arrays;
 import java.util.Calendar;
@@ -27,7 +29,7 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-
+//@RunWith(ParallelRunner.class)
 public class LocacaoServiceTest {
 
     private LocacaoService service;
@@ -40,6 +42,9 @@ public class LocacaoServiceTest {
 
     @Before
     public void setUp() {
+        System.out.println("Iniciando 2...");
+        CalculadoraTest.ordem.append(2);
+
         service = new LocacaoService();
 
         //LocacaoDAO dao = new LocacaoDAOFake();
@@ -48,6 +53,11 @@ public class LocacaoServiceTest {
 
         SPCService spcService = Mockito.mock(SPCService.class);
         service.setSpcService(spcService);
+    }
+
+    @After
+    public void tearDown() {
+        System.out.println("Finalizando 2...");
     }
 
     @Test
